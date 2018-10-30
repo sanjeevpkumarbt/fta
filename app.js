@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var fs = require('fs');
+var dbconn;
 
 app.use(express.static('html/public'));
 
@@ -20,22 +21,26 @@ var MongoClient = require('mongodb').MongoClient,
   assert = require('assert');
 
 // Read the cert and key
-var cert = fs.readFileSync("/home/kumarsp2/keys/client.pem");
-var key = fs.readFileSync("/home/kumarsp2/keys/client.pem");
+var cert = fs.readFileSync("/keys/client.pem");
+var key = fs.readFileSync("/keys/client.pem");
 
 // User name
-var userName = encodeURIComponent("CN=kumarsp2-VirtualBox,OU=IT,O=trznt,L=Bangalore,ST=Karnataka,C=IN");
+var userName = encodeURIComponent("CN=node01.trznt.com,OU=IT,O=trznt,L=Bangalore,ST=Karnataka,C=IN");
 
 // Connect using X509 authentication
-MongoClient.connect(f('mongodb://%s@kumarsp2-VirtualBox:27017/test?ssl=true', userName), {
-  server: {
-      sslKey:key
-    , sslCert:cert
-    , sslValidate:false
-  }
-}, function(err, db) {
-  assert.equal(null, err);
-  console.log("Connected correctly to server");
+function openDB() {
+    MongoClient.connect(f('mongodb://%s@%s:27017/test?ssl=true', userName,process.env.DBSERVER), {
+    server: {
+        sslKey:key
+      , sslCert:cert
+      , sslValidate:false
+    }
+  }, function(err, db) {
+    assert.equal(null, err);
+    console.log("Connected correctly to DB server: " + process.env.DBSERVER);
 
-  db.close();
-});
+    dbconn = db;
+  });
+}
+
+setTimeout(openDB,4000);
