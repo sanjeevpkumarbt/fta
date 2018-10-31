@@ -1,46 +1,34 @@
-var express = require('express');
-var app = express();
-var fs = require('fs');
-var dbconn;
+//These are checks before we get into starting up the Server
+if(process.env.KEYS == null || process.env.DBSERVER == null) {
+  console.log("Err: Environment variables not set.")
+  process.exit();
+}
+////////////////////////////////////////////////////////////
 
-app.use(express.static('html/public'));
+var ws = require('./lib/webserver.js');
+var app = ws.init();
+var server;
+
+var dbconn = require('./lib/dbconn.js');
+var db;
+
+dbconn.openDB(0,function (error, res) {
+  if (error)
+    console.log("Unable to connect to the Database " + error.message);
+  else {
+    console.log("DBCONN is set");
+    db = res;
+    server = ws.listen(app);
+    console.log("Server is listening at http://%s:%s", server.address().address, server.address().port);
+  }
+});
 
 app.get('/',function(req,res){
   res.sendFile(__dirname + "/html/index.html");
+  console.log("Accessed index.html");
 })
 
-var server = app.listen(8081, function() {
-    var host = server.address().address;
-    var port = server.address().port;
-    console.log("Server is listening at http://%s:%s", host, port);
+app.post('/api/addUsers', function(req,res){
+  console.log(req.body.user + req.body.phone);
+  res.send("Thanks for registering");
 });
-
-
-var MongoClient = require('mongodb').MongoClient,
-  f = require('util').format,
-  assert = require('assert');
-
-// Read the cert and key
-var cert = fs.readFileSync("/keys/client.pem");
-var key = fs.readFileSync("/keys/client.pem");
-
-// User name
-var userName = encodeURIComponent("CN=node01.trznt.com,OU=IT,O=trznt,L=Bangalore,ST=Karnataka,C=IN");
-
-// Connect using X509 authentication
-function openDB() {
-    MongoClient.connect(f('mongodb://%s@%s:27017/test?ssl=true', userName,process.env.DBSERVER), {
-    server: {
-        sslKey:key
-      , sslCert:cert
-      , sslValidate:false
-    }
-  }, function(err, db) {
-    assert.equal(null, err);
-    console.log("Connected correctly to DB server: " + process.env.DBSERVER);
-
-    dbconn = db;
-  });
-}
-
-setTimeout(openDB,4000);
