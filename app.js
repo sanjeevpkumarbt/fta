@@ -10,6 +10,7 @@ var app = ws.init();
 var server;
 
 var dbconn = require('./lib/dbconn.js');
+var dbhandle;
 var db;
 
 dbconn.openDB(0,function (error, res) {
@@ -17,7 +18,8 @@ dbconn.openDB(0,function (error, res) {
     console.log("Unable to connect to the Database " + error.message);
   else {
     console.log("DBCONN is set");
-    db = res;
+    dbhandle = res; // Setting DB Handle.
+    db = dbhandle.db("optin"); //Setting db to point to the instance we are looking to write into.
     server = ws.listen(app);
     console.log("Server is listening at http://%s:%s", server.address().address, server.address().port);
   }
@@ -28,7 +30,23 @@ app.get('/',function(req,res){
   console.log("Accessed index.html");
 })
 
+app.get('/api/getUsers',function(req,res){
+  db.collection("customers").find({}).toArray(function(err,result){
+    if (err) throw err;
+    var response = "";
+    for(var i = 0;i < result.length;i++){
+      response += "<tr><td>" + (i + 1) + "</td><td>" + result[i].name + "</td><td>" + result[i].address + "</td></tr>";
+    }
+    res.send(response);
+  });
+  console.log("Accessed getUsers");
+})
+
 app.post('/api/addUsers', function(req,res){
-  console.log(req.body.user + req.body.phone);
+  var entry = {name:req.body.user,address:req.body.phone};
+  db.collection("customers").insertOne(entry, function(err,res){
+    if (err) throw err;
+    console.log("1 document inserted")
+  })
   res.send("Thanks for registering");
 });

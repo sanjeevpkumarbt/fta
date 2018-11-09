@@ -12,9 +12,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="/js/main.js"></script>
     <script src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/main.css" />
     <script>
     $(document).ready(function(){
-        initIndex();docker12hash
+        initIndex();
     });
     </script>
 
@@ -31,10 +32,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Add a Request</a>
+            <a class="nav-link" href="#" id="add_entries">Add a Request <span class="sr-only">(current)</span></a>
           </li>
           <!--<li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -48,7 +46,7 @@
             </div>
           </li>-->
           <li class="nav-item">
-            <a class="nav-link" href="#">Registered Requests</a>
+            <a class="nav-link" href="#" id="list_requests">Registered Requests</a>
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -66,14 +64,14 @@
        </div>
      </div>
 
-     <div class="container">
+     <div class="container main-content">
       <!-- Example row of columns -->
-      <div class="row">
+      <div class="row add_entries active_content">
         <div class="col-md-12">
           <h3>Please fill in the informaton here</h3>
         </div>
       </div>
-      <div class="row">
+      <div class="row add_entries active_content">
         <div class="col-md-12">
           <div class="form-group">
             <label for="user">Name:</label>
@@ -86,7 +84,31 @@
           </div>
         </div>
       </div>
-
+      <div class="row list_requests inactive_content">
+        <div class="col-md-12">
+          <h3>Here are the list of added entries:</h3>
+        </div>
+      </div>
+      <div class="row list_requests inactive_content">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Phone</th>
+              </tr>
+            </thead>
+            <tbody class="list_entries">
+              <tr>
+                <td style="width:33%"></td>
+                <td style="width:33%">
+                  <div class="loader"></div>
+                </td>
+                <td style="width:33%"></td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
       <hr>
 
     </div> <!-- /container -->
