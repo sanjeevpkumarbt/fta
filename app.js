@@ -17,7 +17,7 @@ dbconn.openDB(0,function (error, res) {
   if (error)
     console.log("Unable to connect to the Database " + error.message);
   else {
-    console.log("DBCONN is set");
+    console.log("DBCONN is now set");
     dbhandle = res; // Setting DB Handle.
     db = dbhandle.db("optin"); //Setting db to point to the instance we are looking to write into.
     server = ws.listen(app);
