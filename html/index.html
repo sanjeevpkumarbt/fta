@@ -49,9 +49,9 @@
             <a class="nav-link" href="#" id="list_requests">Registered Requests</a>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <form class="form-inline my-2 my-lg-0" onsubmit="return false">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" id="search_string" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" id="search_requests">Search</button>
         </form>
       </div>
     </nav>
@@ -108,6 +108,31 @@
               </tr>
             </tbody>
           </table>
+      </div>
+      <div class="row search_entries inactive_content">
+        <div class="col-md-12">
+          <h3>Search Results</h3>
+        </div>
+      </div>
+      <div class="row search_entries inactive_content">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Phone</th>
+            </tr>
+          </thead>
+          <tbody class="search_list_entries">
+            <tr>
+              <td style="width:33%"></td>
+              <td style="width:33%">
+                <div class="loader"></div>
+              </td>
+              <td style="width:33%"></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <hr>
 

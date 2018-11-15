@@ -47,6 +47,46 @@ app.post('/api/addUsers', function(req,res){
   db.collection("customers").insertOne(entry, function(err,res){
     if (err) throw err;
     console.log("1 document inserted")
-  })
+  });
   res.send("Thanks for registering");
+});
+
+app.post('/api/searchUser', function(req,res){
+  var response = "";
+  console.log("Accessed searchUser");
+    db.collection("customers").find({"name":req.body.string}).toArray(function(err,result){
+      if (err) {
+        throw err;
+        console.log("This is server error")
+        res.send("Server Error");
+      }
+      for(var i = 0;i < result.length;i++){
+        response += "<tr><td>" + (i + 1) + "</td><td>" + result[i].name + "</td><td>" + result[i].address + "</td></tr>";
+      }
+      db.collection("customers").find({"address":req.body.string}).toArray(function(err,result2){
+        if (err) {
+          if (response.length == 0) {
+            res.send("NO_RESULTS");
+            console.log("this is no result");
+          } else {
+            res.send(response);
+            console.log("This is intermediate error")
+            throw err;
+          }
+        }
+        else {
+         for(var j = 0;j < result2.length;i++,j++){
+           response += "<tr><td>" + (i + 1) + "</td><td>" + result2[j].name + "</td><td>" + result2[j].address + "</td></tr>";
+         }
+        }
+        if (response.length == 0)  {
+          res.send("NO_RESULTS");
+          console.log("this is no result");
+        }
+        else {
+          console.log("This is final result")
+          res.send(response);
+        }
+      });
+    });
 });
