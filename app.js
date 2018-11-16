@@ -54,7 +54,7 @@ app.post('/api/addUsers', function(req,res){
 app.post('/api/searchUser', function(req,res){
   var response = "";
   console.log("Accessed searchUser");
-    db.collection("customers").find({"name":req.body.string}).toArray(function(err,result){
+    db.collection("customers").find({"name": new RegExp (req.body.string, "i")}).toArray(function(err,result){
       if (err) {
         throw err;
         console.log("This is server error")
@@ -63,7 +63,7 @@ app.post('/api/searchUser', function(req,res){
       for(var i = 0;i < result.length;i++){
         response += "<tr><td>" + (i + 1) + "</td><td>" + result[i].name + "</td><td>" + result[i].address + "</td></tr>";
       }
-      db.collection("customers").find({"address":req.body.string}).toArray(function(err,result2){
+      db.collection("customers").find({"address":new RegExp (req.body.string, "i")}).toArray(function(err,result2){
         if (err) {
           if (response.length == 0) {
             res.send("NO_RESULTS");
